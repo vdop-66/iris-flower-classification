@@ -73,6 +73,7 @@ def predict() -> Any:
     features = np.array([values])
     prediction = knn_model.predict(features)[0]
     probabilities = knn_model.predict_proba(features)[0]
+    confidence = float(np.max(probabilities))
 
     return jsonify(
         {
@@ -81,6 +82,7 @@ def predict() -> Any:
                 iris_dataset.target_names[idx]: round(float(score), 3)
                 for idx, score in enumerate(probabilities)
             },
+            "confidence": round(confidence, 3),
         }
     )
 
