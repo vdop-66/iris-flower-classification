@@ -3,85 +3,162 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Iris Flower Predictor</title>
+    <title>Iris Predictor</title>
     <style>
       :root {
-        color-scheme: light dark;
-        --accent: #6366f1;
-        --card: color-mix(in srgb, Canvas 90%, #111 10%);
-        --border: color-mix(in srgb, #d1d5db 70%, #111 30%);
+        --bg: radial-gradient(circle at 20% 20%, #f0e7ff 0, transparent 30%),
+          radial-gradient(circle at 80% 10%, #e0f7ff 0, transparent 25%),
+          radial-gradient(circle at 10% 80%, #ffeef5 0, transparent 28%),
+          #f7f9fc;
+        --card: #ffffff;
+        --primary: #7c3aed;
+        --primary-dark: #5b21b6;
+        --accent: #06b6d4;
+        --text: #0f172a;
+        --muted: #475569;
+        --border: #e2e8f0;
+        --shadow: 0 20px 70px rgba(15, 23, 42, 0.15);
+        --radius: 18px;
+      }
+
+      * {
+        box-sizing: border-box;
       }
 
       body {
         margin: 0;
-        font-family: "Inter", system-ui, -apple-system, sans-serif;
-        background: radial-gradient(circle at 20% 20%, #eef2ff, transparent 35%),
-          radial-gradient(circle at 80% 0%, #cffafe, transparent 30%),
-          radial-gradient(circle at 20% 80%, #fef3c7, transparent 25%),
-          #f8fafc;
-        color: #0f172a;
+        font-family: "Inter", "SF Pro Display", system-ui, -apple-system,
+          sans-serif;
+        background: var(--bg);
+        color: var(--text);
         min-height: 100vh;
+        line-height: 1.6;
+        -webkit-font-smoothing: antialiased;
       }
 
       .page {
-        max-width: 980px;
+        max-width: 1180px;
         margin: 0 auto;
-        padding: 2.5rem 1.5rem 3rem;
+        padding: 1.5rem clamp(1rem, 4vw, 2rem) 2.5rem;
       }
 
-      header {
+      nav {
         display: flex;
-        flex-wrap: wrap;
-        align-items: baseline;
+        justify-content: space-between;
+        align-items: center;
+        padding: 1rem 1.25rem;
+        background: rgba(255, 255, 255, 0.7);
+        backdrop-filter: blur(12px);
+        border: 1px solid rgba(226, 232, 240, 0.8);
+        border-radius: calc(var(--radius) + 6px);
+        box-shadow: 0 10px 40px rgba(124, 58, 237, 0.08);
+      }
+
+      .brand {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.65rem;
+        font-weight: 800;
+        letter-spacing: -0.3px;
+      }
+
+      .brand span {
+        width: 38px;
+        height: 38px;
+        display: grid;
+        place-items: center;
+        border-radius: 12px;
+        background: linear-gradient(135deg, #a855f7, #06b6d4);
+        color: #fff;
+        box-shadow: 0 10px 30px rgba(124, 58, 237, 0.35);
+        font-size: 1.1rem;
+      }
+
+      .nav-links {
+        display: flex;
+        gap: 1rem;
+        color: var(--muted);
+        font-weight: 600;
+        font-size: 0.95rem;
+      }
+
+      .hero {
+        margin: 2rem 0 1.25rem;
+        display: grid;
         gap: 0.75rem;
-        margin-bottom: 1rem;
+      }
+
+      .eyebrow {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+        padding: 0.4rem 0.8rem;
+        border-radius: 999px;
+        background: rgba(124, 58, 237, 0.12);
+        color: var(--primary);
+        font-weight: 700;
+        width: fit-content;
       }
 
       h1 {
         margin: 0;
-        font-size: 2.25rem;
-        letter-spacing: -0.5px;
+        font-size: clamp(2.2rem, 4vw, 3rem);
+        letter-spacing: -0.8px;
       }
 
-      .pill {
-        display: inline-flex;
-        align-items: center;
-        gap: 0.45rem;
-        padding: 0.35rem 0.75rem;
-        border-radius: 999px;
-        border: 1px solid var(--border);
-        background: var(--card);
-        font-weight: 600;
-        color: #111827;
+      .lede {
+        margin: 0;
+        color: var(--muted);
+        max-width: 720px;
       }
 
       .grid {
         display: grid;
-        gap: 1.25rem;
+        gap: 1.5rem;
       }
 
-      @media (min-width: 900px) {
+      @media (min-width: 960px) {
         .grid {
-          grid-template-columns: 2fr 1.2fr;
+          grid-template-columns: 1.15fr 0.9fr;
+          align-items: start;
         }
       }
 
       .card {
-        background: white;
+        background: var(--card);
+        border-radius: var(--radius);
         border: 1px solid var(--border);
-        border-radius: 1rem;
-        padding: 1.5rem;
-        box-shadow: 0 25px 60px rgba(15, 23, 42, 0.07);
+        padding: clamp(1.25rem, 2vw, 1.75rem);
+        box-shadow: var(--shadow);
+        position: relative;
+        overflow: hidden;
+      }
+
+      .card::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: radial-gradient(circle at 120% 20%, rgba(124, 58, 237, 0.1), transparent 40%),
+          radial-gradient(circle at -10% 60%, rgba(6, 182, 212, 0.12), transparent 42%);
+        pointer-events: none;
       }
 
       .card h2 {
-        margin: 0 0 0.6rem;
+        margin: 0 0 0.35rem;
         font-size: 1.35rem;
+        letter-spacing: -0.2px;
       }
 
       .card p {
-        margin: 0 0 1rem;
-        color: #334155;
+        margin: 0 0 0.8rem;
+        color: var(--muted);
+      }
+
+      form {
+        display: grid;
+        gap: 1rem;
+        position: relative;
+        z-index: 1;
       }
 
       .field {
@@ -90,72 +167,175 @@
       }
 
       label {
-        font-weight: 600;
-        color: #0f172a;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        gap: 0.4rem;
+      }
+
+      .hint {
+        color: var(--muted);
+        font-size: 0.9rem;
+      }
+
+      .tooltip {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 20px;
+        height: 20px;
+        border-radius: 999px;
+        background: rgba(124, 58, 237, 0.12);
+        color: var(--primary);
+        font-size: 0.8rem;
+        position: relative;
+        cursor: help;
+      }
+
+      .tooltip span {
+        visibility: hidden;
+        opacity: 0;
+        transition: opacity 0.2s ease, transform 0.2s ease;
+        transform: translateY(6px);
+        position: absolute;
+        bottom: 140%;
+        left: 50%;
+        translate: -50% 0;
+        background: #0f172a;
+        color: white;
+        padding: 0.5rem 0.65rem;
+        border-radius: 10px;
+        width: 200px;
+        text-align: center;
+        font-size: 0.8rem;
+        box-shadow: 0 12px 30px rgba(15, 23, 42, 0.2);
+      }
+
+      .tooltip:hover span,
+      .tooltip:focus-visible span {
+        visibility: visible;
+        opacity: 1;
+        transform: translateY(0);
       }
 
       input[type="number"] {
-        padding: 0.75rem 0.85rem;
-        border-radius: 0.65rem;
+        padding: 0.85rem 0.95rem;
+        border-radius: 14px;
         border: 1px solid var(--border);
         background: #f8fafc;
         font-size: 1rem;
-        transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.12s ease;
       }
 
       input[type="number"]:focus {
         outline: none;
-        border-color: var(--accent);
-        box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
+        border-color: var(--primary);
+        box-shadow: 0 0 0 4px rgba(124, 58, 237, 0.14);
+      }
+
+      input[type="number"]:invalid {
+        border-color: #ef4444;
+        box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.18);
+      }
+
+      .controls {
+        display: flex;
+        align-items: center;
+        gap: 0.8rem;
+        flex-wrap: wrap;
       }
 
       button {
         appearance: none;
         border: none;
-        padding: 0.85rem 1.1rem;
-        border-radius: 0.75rem;
-        background: linear-gradient(120deg, #6366f1, #8b5cf6);
+        padding: 0.95rem 1.2rem;
+        border-radius: 14px;
+        background: linear-gradient(130deg, #7c3aed, #06b6d4);
         color: white;
-        font-weight: 700;
+        font-weight: 800;
         letter-spacing: 0.2px;
         cursor: pointer;
-        transition: transform 0.12s ease, box-shadow 0.12s ease;
+        transition: transform 0.15s ease, box-shadow 0.18s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.6rem;
       }
 
       button:hover {
         transform: translateY(-1px);
-        box-shadow: 0 10px 25px rgba(99, 102, 241, 0.3);
+        box-shadow: 0 10px 30px rgba(124, 58, 237, 0.3);
+      }
+
+      button:active {
+        transform: translateY(0);
       }
 
       button:disabled {
-        opacity: 0.5;
+        opacity: 0.6;
         cursor: not-allowed;
-        transform: none;
         box-shadow: none;
       }
 
-      .result {
-        display: grid;
-        gap: 0.35rem;
-        margin-top: 0.5rem;
+      .spinner {
+        width: 18px;
+        height: 18px;
+        border: 3px solid rgba(255, 255, 255, 0.4);
+        border-top-color: #fff;
+        border-radius: 50%;
+        animation: spin 0.8s linear infinite;
+        display: none;
       }
 
-      .badge {
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+
+      .status {
+        color: var(--muted);
+        font-weight: 600;
+      }
+
+      .result-card {
+        margin-top: 1rem;
+        padding: 1rem;
+        border-radius: 16px;
+        border: 1px solid var(--border);
+        background: linear-gradient(145deg, #f8fafc, #ffffff);
+        display: grid;
+        gap: 0.45rem;
+        align-items: center;
+      }
+
+      .species-pill {
         display: inline-flex;
         align-items: center;
         gap: 0.5rem;
-        padding: 0.55rem 0.85rem;
-        border-radius: 0.75rem;
-        background: #eef2ff;
-        color: #312e81;
-        font-weight: 700;
-        width: fit-content;
+        font-weight: 800;
+        padding: 0.6rem 0.9rem;
+        border-radius: 999px;
+        color: #0f172a;
+      }
+
+      .species-pill[data-species="setosa"] {
+        background: #dcfce7;
+        color: #166534;
+      }
+
+      .species-pill[data-species="versicolor"] {
+        background: #ffedd5;
+        color: #c2410c;
+      }
+
+      .species-pill[data-species="virginica"] {
+        background: #ede9fe;
+        color: #5b21b6;
       }
 
       .probabilities {
         display: grid;
-        gap: 0.4rem;
-        margin-top: 0.5rem;
+        gap: 0.55rem;
       }
 
       .bar {
@@ -171,107 +351,363 @@
         background: linear-gradient(90deg, #22c55e, #14b8a6);
       }
 
-      code {
-        background: #0f172a;
-        color: #e2e8f0;
-        padding: 0.6rem 0.8rem;
-        border-radius: 0.75rem;
-        display: block;
-        overflow-x: auto;
+      .confidence {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+        font-weight: 700;
+        color: var(--muted);
+      }
+
+      .confidence-meter {
+        position: relative;
+        width: 100%;
+        height: 10px;
+        border-radius: 999px;
+        background: #e2e8f0;
+        overflow: hidden;
+      }
+
+      .confidence-meter span {
+        position: absolute;
+        inset: 0;
+        width: 50%;
+        background: linear-gradient(90deg, #7c3aed, #06b6d4);
+      }
+
+      .illustration {
+        position: relative;
+        height: 220px;
+        display: grid;
+        place-items: center;
+        margin-top: 0.5rem;
+      }
+
+      .flower {
+        width: 220px;
+        filter: drop-shadow(0 12px 24px rgba(124, 58, 237, 0.25));
+        animation: float 6s ease-in-out infinite;
+      }
+
+      @keyframes float {
+        0%,
+        100% {
+          transform: translateY(0);
+        }
+        50% {
+          transform: translateY(-8px);
+        }
+      }
+
+      .how-to ul {
+        padding-left: 1.1rem;
+        color: var(--muted);
+        margin: 0 0 0.75rem;
       }
 
       footer {
         margin-top: 2rem;
-        color: #475569;
+        color: var(--muted);
+        text-align: center;
+        font-size: 0.95rem;
+      }
+
+      .error-text {
+        color: #dc2626;
+        font-weight: 600;
+      }
+
+      .mini-chart {
+        display: flex;
+        gap: 0.35rem;
+        align-items: flex-end;
+        margin-top: 0.25rem;
+        height: 46px;
+      }
+
+      .mini-chart div {
+        flex: 1;
+        border-radius: 10px;
+        background: linear-gradient(180deg, #a855f7, #7c3aed);
+        transition: height 0.3s ease;
+      }
+
+      @media (max-width: 640px) {
+        nav {
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 0.75rem;
+        }
+
+        .controls {
+          flex-direction: column;
+          align-items: stretch;
+        }
+
+        button {
+          width: 100%;
+          justify-content: center;
+        }
       }
     </style>
   </head>
   <body>
     <div class="page">
-      <header>
-        <h1>🌸 Interactive Iris Predictor</h1>
-        <div class="pill">KNN · StandardScaler · scikit-learn</div>
-      </header>
+      <nav>
+        <div class="brand"><span>🌸</span> Iris Insight</div>
+        <div class="nav-links">
+          <span>Model: KNN + StandardScaler</span>
+          <span>Dataset: Iris</span>
+        </div>
+      </nav>
 
-      <p>
-        Enter sepal and petal measurements to predict the most likely Iris
-        species. The form talks to a lightweight Flask API powered by a
-        StandardScaler + KNN model trained on the classic dataset.
-      </p>
+      <section class="hero">
+        <div class="eyebrow">Interactive ML demo</div>
+        <h1>Predict Iris species with a polished, responsive experience.</h1>
+        <p class="lede">
+          Enter sepal and petal measurements and see the predicted species with
+          confidence, probabilities, validation hints, and a soothing gradient UI.
+        </p>
+      </section>
 
       <div class="grid">
         <section class="card">
-          <h2>Try a prediction</h2>
-          <p>Numbers can be decimals. Use centimeters for each measurement.</p>
+          <h2>Enter your measurements</h2>
+          <p>All fields accept decimals. Keep values between 0 and 10 cm.</p>
 
-          <form id="predict-form">
+          <form id="predict-form" novalidate>
             <div class="field">
-              <label for="sepal_length">Sepal length (cm)</label>
-              <input id="sepal_length" name="sepal_length" type="number" step="0.1" min="0" value="5.1" required />
-            </div>
-            <div class="field">
-              <label for="sepal_width">Sepal width (cm)</label>
-              <input id="sepal_width" name="sepal_width" type="number" step="0.1" min="0" value="3.5" required />
-            </div>
-            <div class="field">
-              <label for="petal_length">Petal length (cm)</label>
-              <input id="petal_length" name="petal_length" type="number" step="0.1" min="0" value="1.4" required />
-            </div>
-            <div class="field">
-              <label for="petal_width">Petal width (cm)</label>
-              <input id="petal_width" name="petal_width" type="number" step="0.1" min="0" value="0.2" required />
+              <label for="sepal_length">
+                Sepal length (cm)
+                <span class="tooltip" tabindex="0">?
+                  <span>The longer outer part of the flower. Typical range 4–8 cm.</span>
+                </span>
+              </label>
+              <input
+                id="sepal_length"
+                name="sepal_length"
+                type="number"
+                inputmode="decimal"
+                step="0.1"
+                min="0"
+                max="10"
+                value="5.1"
+                required
+              />
+              <div class="hint">Example: 5.1</div>
             </div>
 
-            <div style="margin-top: 1rem; display: flex; gap: 0.65rem; align-items: center;">
-              <button type="submit" id="submit-btn">Predict species</button>
-              <span id="status" aria-live="polite"></span>
+            <div class="field">
+              <label for="sepal_width">
+                Sepal width (cm)
+                <span class="tooltip" tabindex="0">?
+                  <span>Wider outer part of the flower. Typical range 2–5 cm.</span>
+                </span>
+              </label>
+              <input
+                id="sepal_width"
+                name="sepal_width"
+                type="number"
+                inputmode="decimal"
+                step="0.1"
+                min="0"
+                max="10"
+                value="3.5"
+                required
+              />
+              <div class="hint">Example: 3.5</div>
             </div>
+
+            <div class="field">
+              <label for="petal_length">
+                Petal length (cm)
+                <span class="tooltip" tabindex="0">?
+                  <span>Inner colored leaf. Typical range 1–7 cm.</span>
+                </span>
+              </label>
+              <input
+                id="petal_length"
+                name="petal_length"
+                type="number"
+                inputmode="decimal"
+                step="0.1"
+                min="0"
+                max="10"
+                value="1.4"
+                required
+              />
+              <div class="hint">Example: 1.4</div>
+            </div>
+
+            <div class="field">
+              <label for="petal_width">
+                Petal width (cm)
+                <span class="tooltip" tabindex="0">?
+                  <span>Width of the inner colored leaf. Typical range 0.1–2.5 cm.</span>
+                </span>
+              </label>
+              <input
+                id="petal_width"
+                name="petal_width"
+                type="number"
+                inputmode="decimal"
+                step="0.1"
+                min="0"
+                max="10"
+                value="0.2"
+                required
+              />
+              <div class="hint">Example: 0.2</div>
+            </div>
+
+            <div class="controls">
+              <button type="submit" id="submit-btn">
+                <div class="spinner" id="spinner" aria-hidden="true"></div>
+                <span>Predict species</span>
+              </button>
+              <span id="status" class="status" aria-live="polite"></span>
+            </div>
+            <div id="error" class="error-text"></div>
           </form>
 
-          <div class="result" id="result" hidden>
-            <div class="badge" id="species"></div>
+          <div class="result-card" id="result" hidden>
+            <div class="species-pill" id="species">Species</div>
+            <div class="confidence">
+              <span>Model confidence</span>
+              <div class="confidence-meter" aria-hidden="true">
+                <span id="confidence-bar"></span>
+              </div>
+              <span id="confidence-text">0%</span>
+            </div>
             <div class="probabilities" id="probabilities"></div>
+            <div class="mini-chart" id="mini-chart"></div>
           </div>
         </section>
 
-        <section class="card">
+        <section class="card how-to">
           <h2>How it works</h2>
           <p>
-            The backend trains a pipeline when the server starts, then exposes a
-            <code>POST /predict</code> endpoint. Your inputs are scaled and fed into a
-            3-neighbor classifier.
+            We train a <strong>StandardScaler</strong> + <strong>3-NN</strong>
+            classifier from scikit-learn when the server starts. Your inputs are
+            scaled, passed to the classifier, and the predicted probabilities are
+            returned.
           </p>
-          <code>
-            curl -X POST http://localhost:5000/predict \<br />
-            &nbsp; -H "Content-Type: application/json" \<br />
-            &nbsp; -d '{"sepal_length": 5.1, "sepal_width": 3.5, "petal_length": 1.4, "petal_width": 0.2}'
-          </code>
-          <p style="margin-top: 1rem;">
-            Trained classes: <strong>{{ ', '.join(target_names) }}</strong>
-          </p>
+          <ul>
+            <li>Endpoints: <code>POST /predict</code></li>
+            <li>Classes: <strong>{{ ', '.join(target_names) }}</strong></li>
+            <li>Real-time validation and loading feedback in the UI.</li>
+          </ul>
+          <div class="illustration" aria-hidden="true">
+            <svg class="flower" viewBox="0 0 200 200" fill="none">
+              <defs>
+                <linearGradient id="petal" x1="0" y1="0" x2="1" y2="1">
+                  <stop stop-color="#a855f7" />
+                  <stop offset="1" stop-color="#06b6d4" />
+                </linearGradient>
+              </defs>
+              <circle cx="100" cy="100" r="18" fill="#0ea5e9" />
+              <path d="M100 22 C110 60 130 80 100 100 C70 80 90 60 100 22Z" fill="url(#petal)" opacity="0.85" />
+              <path d="M178 100 C140 90 120 70 100 100 C120 130 140 110 178 100Z" fill="url(#petal)" opacity="0.85" />
+              <path d="M100 178 C90 140 70 120 100 100 C130 120 110 140 100 178Z" fill="url(#petal)" opacity="0.85" />
+              <path d="M22 100 C60 110 80 130 100 100 C80 70 60 90 22 100Z" fill="url(#petal)" opacity="0.85" />
+            </svg>
+          </div>
         </section>
       </div>
 
       <footer>
-        Tip: try values like <em>6.3, 2.7, 4.9, 1.8</em> for Versicolor or
-        <em>6.7, 3.1, 5.6, 2.4</em> for Virginica.
+        Crafted by Your Name ·
+        <a href="https://github.com/yourgithub" target="_blank" rel="noreferrer"
+          >GitHub</a
+        >
       </footer>
     </div>
 
     <script>
       const form = document.getElementById("predict-form");
       const submitBtn = document.getElementById("submit-btn");
+      const spinner = document.getElementById("spinner");
       const statusEl = document.getElementById("status");
       const result = document.getElementById("result");
       const speciesEl = document.getElementById("species");
       const probabilitiesEl = document.getElementById("probabilities");
+      const confidenceBar = document.getElementById("confidence-bar");
+      const confidenceText = document.getElementById("confidence-text");
+      const miniChart = document.getElementById("mini-chart");
+      const errorEl = document.getElementById("error");
+      const inputs = Array.from(form.querySelectorAll("input[type='number']"));
+
+      const speciesColors = {
+        setosa: { bg: "#dcfce7", text: "#166534" },
+        versicolor: { bg: "#ffedd5", text: "#c2410c" },
+        virginica: { bg: "#ede9fe", text: "#5b21b6" },
+      };
+
+      const validators = {
+        required: (value) => value !== "" && value !== null,
+        numeric: (value) => !Number.isNaN(Number(value)),
+        range: (value) => Number(value) >= 0 && Number(value) <= 10,
+      };
+
+      function validateInput(input) {
+        const value = input.value.trim();
+        if (!validators.required(value)) {
+          return `${input.name.replace("_", " ")} is required.`;
+        }
+        if (!validators.numeric(value)) {
+          return `${input.name.replace("_", " ")} must be a number.`;
+        }
+        if (!validators.range(value)) {
+          return `${input.name.replace("_", " ")} must be between 0 and 10.`;
+        }
+        return "";
+      }
+
+      function showError(message) {
+        errorEl.textContent = message;
+      }
+
+      function clearError() {
+        errorEl.textContent = "";
+      }
+
+      function updateMiniChart(probabilities) {
+        miniChart.innerHTML = Object.entries(probabilities)
+          .map(([label, value]) => {
+            const height = Math.max(10, Math.round(value * 100)) + "%";
+            return `<div title="${label}: ${(value * 100).toFixed(1)}%" style="height:${height}"></div>`;
+          })
+          .join("");
+      }
+
+      inputs.forEach((input) => {
+        input.addEventListener("input", () => {
+          const message = validateInput(input);
+          if (message) {
+            showError(message);
+            submitBtn.disabled = true;
+          } else {
+            clearError();
+            submitBtn.disabled = inputs.some((el) => validateInput(el));
+          }
+        });
+      });
 
       form.addEventListener("submit", async (event) => {
         event.preventDefault();
+        const errors = inputs.map(validateInput).filter(Boolean);
+        if (errors.length) {
+          showError(errors[0]);
+          return;
+        }
+        clearError();
+
+        spinner.style.display = "inline-block";
         statusEl.textContent = "Predicting...";
         submitBtn.disabled = true;
         result.hidden = true;
         probabilitiesEl.innerHTML = "";
+        miniChart.innerHTML = "";
 
         const formData = new FormData(form);
         const payload = Object.fromEntries(formData.entries());
@@ -293,12 +729,27 @@
             throw new Error(data.error || "Something went wrong");
           }
 
-          speciesEl.textContent = `Predicted: ${data.species}`;
-          probabilitiesEl.innerHTML = Object.entries(data.probabilities)
+          const species = data.species;
+          const probs = data.probabilities || {};
+          const confidence =
+            typeof data.confidence === "number"
+              ? data.confidence
+              : Math.max(...Object.values(probs)) || 0;
+
+          speciesEl.textContent = `Predicted: ${species}`;
+          speciesEl.dataset.species = species;
+          const speciesStyle = speciesColors[species] || {
+            bg: "#eef2ff",
+            text: "#312e81",
+          };
+          speciesEl.style.background = speciesStyle.bg;
+          speciesEl.style.color = speciesStyle.text;
+
+          probabilitiesEl.innerHTML = Object.entries(probs)
             .map(
               ([label, value]) => `
               <div>
-                <div style="display:flex; justify-content:space-between; font-weight:600; color:#0f172a;">
+                <div style="display:flex; justify-content:space-between; font-weight:700; color:#0f172a;">
                   <span>${label}</span>
                   <span>${(value * 100).toFixed(1)}%</span>
                 </div>
@@ -307,11 +758,17 @@
             )
             .join("");
 
+          confidenceBar.style.width = `${(confidence * 100).toFixed(0)}%`;
+          confidenceText.textContent = `${(confidence * 100).toFixed(1)}%`;
+          updateMiniChart(probs);
+
           result.hidden = false;
-          statusEl.textContent = "Ready";
+          statusEl.textContent = "Prediction ready";
         } catch (error) {
-          statusEl.textContent = error.message;
+          statusEl.textContent = "";
+          showError(error.message);
         } finally {
+          spinner.style.display = "none";
           submitBtn.disabled = false;
         }
       });
